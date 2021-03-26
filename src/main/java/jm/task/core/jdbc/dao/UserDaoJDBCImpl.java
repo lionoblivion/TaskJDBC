@@ -29,6 +29,12 @@ public class UserDaoJDBCImpl implements UserDao {
             e.printStackTrace();
 
         }
+        try {
+            connection.rollback();
+        } catch (SQLException x){
+            x.printStackTrace();
+        }
+
 
     }
 
@@ -39,6 +45,11 @@ public class UserDaoJDBCImpl implements UserDao {
             connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        try {
+            connection.rollback();
+        } catch (SQLException x){
+            x.printStackTrace();
         }
 
     }
