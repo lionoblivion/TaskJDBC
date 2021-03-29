@@ -1,8 +1,12 @@
 package jm.task.core.jdbc.util;
 
 
-
-
+import jm.task.core.jdbc.model.User;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.Environment;
+import org.hibernate.SessionFactory;
+import org.hibernate.service.ServiceRegistry;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -25,5 +29,26 @@ public class Util {
         return connection;
     }
 
+    private static SessionFactory sessionFactory;
+    public static SessionFactory getSessionFactory() {
+        if(sessionFactory == null){
+            Configuration configuration = new Configuration();
+            Properties properties = new Properties();
+            properties.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
+            properties.put(Environment.URL, HOST);
+            properties.put(Environment.USER, USERNAME);
+            properties.put(Environment.PASS, PASSWORD);
+            properties.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
+
+            configuration.setProperties(properties);
+            configuration.addAnnotatedClass(User.class);
+
+            ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
+                    .applySettings(configuration.getProperties())
+                    .build();
+            sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+        }
+        return sessionFactory;
     }
+}
 
